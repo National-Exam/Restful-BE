@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import User from "../models/user.model.js";
-
+import {PrismaClient } from '@prisma/client'
+const prisma = new PrismaClient()
 const checker = async (req, res, next) => {
   const authHeader = req.headers.authorization;  
   try {
@@ -10,12 +10,19 @@ const checker = async (req, res, next) => {
 
     const token = authHeader.split(" ")[1]; // Extract the token from the Authorization header
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);    
-    const user = await User.findById(decoded.userId);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);        
+    const user =  await prisma.user.findUnique({
+            where: {
+                id: decoded.userId
+            }
+        });
+        delete user.password;        
 
     if (!user) {
       throw new Error("Not authorized");
     }
+    if(!user.verified)
+       throw new Error("First verify the account to login")
 
     req.user = user;
     next();

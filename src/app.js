@@ -2,10 +2,8 @@ import express from "express";
 import cors from "cors";
 const app = express();
 import dotenv from "dotenv";
-import connectDB from "./utils/db.js";
-import VehicleRouter from "./routes/vehicle.routes.js";
+import EmployeeRouter from "./routes/employee.routes.js";
 import UserRouter from "./routes/user.routes.js";
-import OwnerRouter from "./routes/owner.routes.js";
 import swaggerDocs from "./swagger.js";
 dotenv.config();
 const port = process.env.PORT || 8000;
@@ -27,7 +25,6 @@ app.use(function (req, res, next) {
 });
 app.use(express.json());
 // connect to db
-connectDB();
 
 
 // Define routes
@@ -36,11 +33,11 @@ app.get("/healthcheck", (req, res) => {
 });
 
 app.use("/api/v1/users", UserRouter);
-app.use("/api/v1/owners", OwnerRouter);
-app.use("/api/v1/vehicles", VehicleRouter);
+app.use("/api/v1/employees", EmployeeRouter);
 
 // Start the server
-app.listen(port, () => {
+app.listen(port, () => { 
   console.log(`Server listening on port ${port}`);
   swaggerDocs(app, port);
 });
+ 
