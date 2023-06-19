@@ -1,5 +1,5 @@
 import express from "express";
-import { createEmployee, getAllEmployees } from "../controllers/employee.controller.js";
+import { createDepartment, createEmployee, createLaptop, getAllEmployees, getDepartments, getLaptops } from "../controllers/employee.controller.js";
 import { validateBody } from "../middleware/validator.middleware.js";
 import { employeeSchema } from "../utils/schemas.js";
 import checker from "../middleware/auth.middleware.js";
@@ -22,7 +22,6 @@ const router = express.Router();
  *           type: string
  *           format: uuid
  */
-
 /**
  * @openapi
  * /api/v1/employees:
@@ -33,7 +32,7 @@ const router = express.Router();
  *     security:
  *       - bearerAuth: []
  *     responses:
- *       200:
+ *       '200':
  *         description: Success
  *         content:
  *           application/json:
@@ -41,22 +40,20 @@ const router = express.Router();
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Employee'
- *       401:
+ *       '401':
  *         description: Unauthorized - User not authenticated
- *       403:
+ *       '403':
  *         description: Forbidden - User does not have admin role
- *       500:
+ *       '500':
  *         description: Internal server error
  */
 
 router.get("/", getAllEmployees);
 
 
-
-
 // Create a new employee
 /**
- * @swagger
+ * @openapi
  * /api/v1/employees:
  *   post:
  *     summary: Create a new employee
@@ -71,41 +68,66 @@ router.get("/", getAllEmployees);
  *           schema:
  *             type: object
  *             properties:
- *               make:
+ *               firstName:
  *                 type: string
- *                 description: The make of the employee
- *                 example: Ford
- *               model:
+ *                 description: First name of the employee
+ *               lastName:
  *                 type: string
- *                 description: The model of the employee
- *                 example: Mustang
- *               year:
- *                 type: number
- *                 description: The year of the employee
- *                 example: 2022
- *               owner:
+ *                 description: Last name of the employee
+ *               nationalId:
  *                 type: string
- *                 format: uuid
- *                 description: The ID of the owner (User)
- *                 example: 603fcca6f4124c00151635b3
+ *                 description: National ID of the employee
+ *               telephone:
+ *                 type: string
+ *                 description: Telephone number of the employee
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: Email address of the employee
+ *               department:
+ *                 type: string
+ *                 description: Department of the employee
+ *               position:
+ *                 type: string
+ *                 description: Position of the employee
+ *               laptopManufacturer:
+ *                 type: string
+ *                 description: Manufacturer of the laptop
+ *               laptopModel:
+ *                 type: string
+ *                 description: Model of the laptop
+ *               serialNumber:
+ *                 type: string
+ *                 description: Serial number of the laptop
+ *             required:
+ *               - firstName
+ *               - lastName
+ *               - nationalId
+ *               - telephone
+ *               - email
+ *               - department
+ *               - position
+ *               - laptopManufacturer
+ *               - laptopModel
+ *               - serialNumber
  *     responses:
- *       201:
- *         description: The created employee object
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Employee'
- *       400:
- *         description: Invalid request body or missing required fields
- *       401:
+ *       '200':
+ *         description: Employee created successfully
+ *       '400':
+ *         description: Invalid request payload
+ *       '401':
  *         description: Unauthorized - User not authenticated
- *       403:
+ *       '403':
  *         description: Forbidden - User does not have admin role
- *       500:
+ *       '500':
  *         description: Internal server error
  */
 
 router.post("/", checker,validateBody(employeeSchema), createEmployee);
+router.post("/laptop", checker, createLaptop);
+router.post("/department", checker, createDepartment);
+router.get("/departments", checker, getDepartments);
+router.get("/laptops", checker, getLaptops);
 
 
 
