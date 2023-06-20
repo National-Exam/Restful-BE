@@ -20,9 +20,7 @@ const checker = async (req, res, next) => {
 
     if (!user) {
       throw new Error("Not authorized");
-    }
-    if(!user.verified)
-       throw new Error("First verify the account to login")
+    }   
 
     req.user = user;
     next();

@@ -4,13 +4,15 @@ import {PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 export async function createUserHandler(req, res) {
   try { 
-     const { email,password } = req.body;
+     const { email,password,confirmPassword } = req.body;
     
       const existingUser = await prisma.user.findUnique({
             where: {
                 email
             }
         });
+        if(password !== confirmPassword) 
+           return res.status(400).send("Password don't match confirm password")
     if (existingUser) {
       return res.status(409).send("User already exists");
     }  
@@ -87,7 +89,7 @@ export const loginUser = async (req, res) => {
     if (!user) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }  
-    if (!user.verified) return res.status(401).json({ message: "First verify your account to continue" });
+    
     // Compare passwords
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {

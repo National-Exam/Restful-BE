@@ -1,7 +1,7 @@
 {
-  "name": "vehicle",
+  "name": "employee",
   "version": "1.0.0",
-  "description": "The vehicle management app",
+  "description": "The employee management app",
   "main": "app.js",
   "type": "module",
   "author": "chainerprince <mutegetsi2000@gmail.com>",
